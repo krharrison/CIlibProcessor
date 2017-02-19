@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CIlibProcessor", "CIlibProcessor\CIlibProcessor.csproj", "{50F576A0-D912-46D3-AAA0-6ED0C5747399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{DF235A7A-CF37-4EAE-BDE5-FB0C67FDF10D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DifferenceAggregator", "DifferenceAggregator\DifferenceAggregator.csproj", "{589C9353-C131-4CE4-9739-03E9B2F94066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticProcessor", "StaticProcessor\StaticProcessor.csproj", "{3ED3F7D9-8A36-49A3-A893-7EAE0D820BFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SummaryStatistics", "SummaryStatistics\SummaryStatistics.csproj", "{B18CD379-0171-429B-9B4F-39EF2D0ACA81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvergenceProcessor", "ConvergenceProcessor\ConvergenceProcessor.csproj", "{564803C9-6717-44BF-9648-747D1215C7EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testbed", "Testbed\Testbed.csproj", "{A56C34DA-F20F-4E69-BB06-2B953BB68551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistics", "Statistics\Statistics.csproj", "{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3ED3F7D9-8A36-49A3-A893-7EAE0D820BFE}.Debug|x86.ActiveCfg = Debug|x86
+		{3ED3F7D9-8A36-49A3-A893-7EAE0D820BFE}.Debug|x86.Build.0 = Debug|x86
+		{3ED3F7D9-8A36-49A3-A893-7EAE0D820BFE}.Release|x86.ActiveCfg = Release|x86
+		{3ED3F7D9-8A36-49A3-A893-7EAE0D820BFE}.Release|x86.Build.0 = Release|x86
+		{50F576A0-D912-46D3-AAA0-6ED0C5747399}.Debug|x86.ActiveCfg = Debug|x86
+		{50F576A0-D912-46D3-AAA0-6ED0C5747399}.Debug|x86.Build.0 = Debug|x86
+		{50F576A0-D912-46D3-AAA0-6ED0C5747399}.Release|x86.ActiveCfg = Release|x86
+		{50F576A0-D912-46D3-AAA0-6ED0C5747399}.Release|x86.Build.0 = Release|x86
+		{564803C9-6717-44BF-9648-747D1215C7EA}.Debug|x86.ActiveCfg = Debug|x86
+		{564803C9-6717-44BF-9648-747D1215C7EA}.Debug|x86.Build.0 = Debug|x86
+		{564803C9-6717-44BF-9648-747D1215C7EA}.Release|x86.ActiveCfg = Release|x86
+		{564803C9-6717-44BF-9648-747D1215C7EA}.Release|x86.Build.0 = Release|x86
+		{589C9353-C131-4CE4-9739-03E9B2F94066}.Debug|x86.ActiveCfg = Debug|x86
+		{589C9353-C131-4CE4-9739-03E9B2F94066}.Debug|x86.Build.0 = Debug|x86
+		{589C9353-C131-4CE4-9739-03E9B2F94066}.Release|x86.ActiveCfg = Release|x86
+		{589C9353-C131-4CE4-9739-03E9B2F94066}.Release|x86.Build.0 = Release|x86
+		{B18CD379-0171-429B-9B4F-39EF2D0ACA81}.Debug|x86.ActiveCfg = Debug|x86
+		{B18CD379-0171-429B-9B4F-39EF2D0ACA81}.Debug|x86.Build.0 = Debug|x86
+		{B18CD379-0171-429B-9B4F-39EF2D0ACA81}.Release|x86.ActiveCfg = Release|x86
+		{B18CD379-0171-429B-9B4F-39EF2D0ACA81}.Release|x86.Build.0 = Release|x86
+		{DF235A7A-CF37-4EAE-BDE5-FB0C67FDF10D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF235A7A-CF37-4EAE-BDE5-FB0C67FDF10D}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF235A7A-CF37-4EAE-BDE5-FB0C67FDF10D}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF235A7A-CF37-4EAE-BDE5-FB0C67FDF10D}.Release|x86.Build.0 = Release|Any CPU
+		{A56C34DA-F20F-4E69-BB06-2B953BB68551}.Debug|x86.ActiveCfg = Debug|x86
+		{A56C34DA-F20F-4E69-BB06-2B953BB68551}.Debug|x86.Build.0 = Debug|x86
+		{A56C34DA-F20F-4E69-BB06-2B953BB68551}.Release|x86.ActiveCfg = Release|x86
+		{A56C34DA-F20F-4E69-BB06-2B953BB68551}.Release|x86.Build.0 = Release|x86
+		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Debug|x86.Build.0 = Debug|Any CPU
+		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Release|x86.ActiveCfg = Release|Any CPU
+		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
