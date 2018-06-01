@@ -10,18 +10,18 @@ namespace DifferenceAggregator
     /// <summary>
     /// This program reads a list of CSV difference files, aggregates the differences scores, then writes an aggregated file.
     /// </summary>
-    class Program
+    internal class Program
     {
-		static readonly List<string> files = new List<string>();
-		static string output = "aggregate.csv";
-        static string averages = "average.csv";
+        private static readonly List<string> Files = new List<string>();
+        private static string _output = "aggregate.csv";
+        private static string _averages = "average.csv";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            options.Parse(args);
+            Options.Parse(args);
 
             Dictionary<string, List<RankOutput>> result = new Dictionary<string, List<RankOutput>>();
-            foreach(string file in files)
+            foreach(string file in Files)
             {
                 //check that the file exists before attempting to parse
                 if(!File.Exists(file))
@@ -42,7 +42,7 @@ namespace DifferenceAggregator
                 //parse the file, add the results to the aggregate
                 foreach(string line in contents.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string[] tokens = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] tokens = line.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                     string name = tokens[0];
                     double wins = double.Parse(tokens[1]);
@@ -57,7 +57,7 @@ namespace DifferenceAggregator
 
             }
             //create directory for output if it doesn't exist
-            DirectoryInfo dir = Directory.GetParent(output);
+            DirectoryInfo dir = Directory.GetParent(_output);
             if(!dir.Exists)
                 dir.Create();
 
@@ -65,7 +65,7 @@ namespace DifferenceAggregator
 
             int numResults = result.Values.First().Count;
 
-            using(TextWriter avgWriter = new StreamWriter(averages))
+            using(TextWriter avgWriter = new StreamWriter(_averages))
             {    
                 avgWriter.WriteLine("Algorithm,Wins,Losses,Diff,Rank,Rank Deviation,Best Rank Freq");
                 foreach(var pair in result)
@@ -102,7 +102,7 @@ namespace DifferenceAggregator
 
 
             //write the aggregate results
-            using(TextWriter writer = new StreamWriter(output))
+            using(TextWriter writer = new StreamWriter(_output))
             {
                 writer.WriteLine("Algorithm,Wins,Losses,Difference,Rank");
                 foreach(var pair in aggregate.OrderBy(x => x.Key))
@@ -114,7 +114,7 @@ namespace DifferenceAggregator
             }
                 
 
-            using(TextWriter writer = new StreamWriter($"{output}.tex"))
+            using(TextWriter writer = new StreamWriter($"{_output}.tex"))
             {
                 //write header
                 writer.WriteLine("\\begin{table}");
@@ -149,11 +149,11 @@ namespace DifferenceAggregator
 		/// <summary>
 		/// Specify the command line arguments.
 		/// </summary>
-		static readonly OptionSet options = new OptionSet
+		private static readonly OptionSet Options = new OptionSet
 		{
-			{ "f|file=", "The files to process.", v => files.Add(v) },
-			{ "o|outfile=", "The file to use as output.", v => output = v },
-			{ "a|avgfile=", "The file to use as output for the averages.", v => averages = v }
+			{ "f|file=", "The files to process.", v => Files.Add(v) },
+			{ "o|outfile=", "The file to use as output.", v => _output = v },
+			{ "a|avgfile=", "The file to use as output for the averages.", v => _averages = v }
 		};
 	}
 }

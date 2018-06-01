@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace CIlibProcessor.Common
+namespace CIlibProcessor.Common.Parser
 {
 
 	/// <summary>
@@ -10,15 +10,15 @@ namespace CIlibProcessor.Common
 	/// </summary>
 	public class SingleIterationParser : CIlibParser
 	{
-		int iteration; 
+		private readonly int _iteration; 
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CIlibProcessor.Common.SingleIterationParser"/> class.
+		/// Initializes a new instance of the <see cref="T:CIlibProcessor.Common.Parser.SingleIterationParser"/> class.
 		/// </summary>
 		/// <param name="iteration">The iteration to parse.</param>
 		public SingleIterationParser(int iteration)
 		{
-			this.iteration = iteration;
+			_iteration = iteration;
 		}
 
 		/// <summary>
@@ -33,19 +33,21 @@ namespace CIlibProcessor.Common
 			//read all lines, then use a parallel for-each loop to find the line we want
 			string file = reader.ReadToEnd();
 			reader.Close();
-			string[] lines = file.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-			string pattern = iteration + " "; //the string must begin with the iteration followed by a space
+			string[] lines = file.Split(new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+			string pattern = _iteration + " "; //the string must begin with the iteration followed by a space
 			string line = string.Empty;
 
-			Parallel.ForEach(lines, (string l, ParallelLoopState state)  =>
+			Parallel.ForEach(lines, (l, state)  =>
 			{
-				if (l.StartsWith(pattern, StringComparison.InvariantCulture)){
+				// ReSharper disable once InvertIf
+				if (l.StartsWith(pattern, StringComparison.InvariantCulture))
+				{
 					line = l;
 					state.Stop();
-				}; 
+				}
 			});
 
-			if (string.IsNullOrEmpty(line)) throw new Exception(string.Format("File {0} does not contain iteration {1}", filename, iteration));
+			if (string.IsNullOrEmpty(line)) throw new Exception($"File {filename} does not contain iteration {_iteration}");
 
 			ReadLine(line);
 		}

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CIlibProcessor.Common
+namespace CIlibProcessor.Common.Parser
 {
 	public abstract class CIlibParser
 	{
-		protected ConcurrentDictionary<string, Measurement> measurements;
-		protected string[] columnArray;
-		protected readonly char[] splitChars = { ' ' };
+		protected ConcurrentDictionary<string, Measurement> Measurements;
+		protected string[] ColumnArray;
+		protected readonly char[] SplitChars = { ' ' };
 
 		/// <summary>
 		/// Parse a single CIlib output file.
@@ -18,7 +18,7 @@ namespace CIlibProcessor.Common
 		/// <param name="filename">The name of the file to parse.</param>
 		public virtual Algorithm Parse(string filename)
 		{
-			measurements = new ConcurrentDictionary<string, Measurement>();
+			Measurements = new ConcurrentDictionary<string, Measurement>();
 
 			if (!File.Exists(filename))
 			{
@@ -34,7 +34,7 @@ namespace CIlibProcessor.Common
 				ReadBody(reader, filename);
 			}
 
-			return new Algorithm(name, measurements.Values.ToList());
+			return new Algorithm(name, Measurements.Values.ToList());
 		}
 
 		public abstract void ReadBody(StreamReader reader, string filename);
@@ -46,14 +46,7 @@ namespace CIlibProcessor.Common
 		/// <param name="directory">Directory.</param>
 		public List<Algorithm> ParseDirectory(string directory)
 		{
-			List<Algorithm> algorithms = new List<Algorithm>();
-
-			foreach (string file in Directory.EnumerateFiles(directory, "*.txt"))
-			{
-				algorithms.Add(Parse(file));
-			}
-
-			return algorithms;
+			return Directory.EnumerateFiles(directory, "*.txt").Select(Parse).ToList();
 		}
 
 		/// <summary>
@@ -62,56 +55,55 @@ namespace CIlibProcessor.Common
 		/// <param name="reader">An opened StreamReader which has not been read from.</param>
 		protected virtual void ReadHeader(StreamReader reader)
 		{
+			// ReSharper disable once RedundantAssignment
 			string line = reader.ReadLine(); //ignore iteration line, which is assumed to be the first line
 
 			List<string> columns = new List<string>();
-			//while (line.StartsWith("#", StringComparison.Ordinal)) //process header to decipher the column structure
-			//{
 			do
 			{
 				line = reader.ReadLine();
-				string[] tokens = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
-				string columnName = tokens[3];
+				string[] tokens = line?.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+				string columnName = tokens?[3];
 				columns.Add(columnName);
-
-				//line = reader.ReadLine();
 			} while (reader.Peek() == '#');
-			//}
 
 			//create an easily indexed array of column names
-			columnArray = columns.ToArray();
+			ColumnArray = columns.ToArray();
 		}
 
+		/// <summary>
+		/// Read an individual line from a CIlib output file
+		/// </summary>
+		/// <param name="line">The line to be read.</param>
 		protected virtual void ReadLine(string line)
 		{
-			string[] tokens = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
-			int iter;
-			if (!int.TryParse(tokens[0], out iter))
+			string[] tokens = line.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+			if (!int.TryParse(tokens[0], out var iter))
 			{
 				Console.WriteLine("Iteration is not the first column.");
 			}
 
 			string columnName;
 
-			int index = 1; //the index of the column being parsed
+			int index = 0; //the index of the column being parsed
 
 			//loop through each column
-			while (index < columnArray.Length)
+			while (index < ColumnArray.Length)
 			{
-				columnName = columnArray[index];
+				columnName = ColumnArray[index];
 
 				List<double> values = new List<double>();
 
 				//loop through the various columns (i.e., runs) for this measure
-				while (index <= columnArray.Length && columnArray[index - 1] == columnName)
+				while (index < ColumnArray.Length && ColumnArray[index] == columnName)
 				{
-					values.Add(double.Parse(tokens[index]));
+					values.Add(double.Parse(tokens[index + 1])); //add 1 to offset iteration as first column
 					index++;
 				}
 
 				IterationStats stats = new IterationStats(iter, values);
 
-				measurements.AddOrUpdate(columnName,
+				Measurements.AddOrUpdate(columnName,
 					x => //add function
 					{
 						Measurement meas = new Measurement(columnName);

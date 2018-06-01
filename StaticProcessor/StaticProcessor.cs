@@ -3,25 +3,26 @@ using NDesk.Options;
 using CIlibProcessor.Common;
 using System.Collections.Generic;
 using System.IO;
+using CIlibProcessor.Common.Parser;
 
 namespace StaticProcessor
 {
-    class StaticProcesssor
+	internal class StaticProcesssor
     {
-        static string directory;
-		static int iteration = -1;
+	    private static string _directory;
+	    private static int _iteration = -1;
 
         public static void Main(string[] args)
         {
-            options.Parse(args);
+            Options.Parse(args);
 
-            if (string.IsNullOrEmpty(directory))
+            if (string.IsNullOrEmpty(_directory))
             {
                 Console.WriteLine("No directory specified, exiting.");
                 Environment.Exit(1);
             }
 
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(_directory))
             {
                 Console.WriteLine("Invalid directory, exiting.");
                 Environment.Exit(1);
@@ -29,12 +30,12 @@ namespace StaticProcessor
 
 			CIlibParser parser;
 
-			if (iteration < 0) //parse only final output
+			if (_iteration < 0) //parse only final output
 				parser = new FinalOutputParser();
 			else //parse specific iteration
-				parser = new SingleIterationParser(iteration);
+				parser = new SingleIterationParser(_iteration);
 			
-			List<Algorithm> algorithms = parser.ParseDirectory(directory);
+			List<Algorithm> algorithms = parser.ParseDirectory(_directory);
 
 			foreach (Algorithm alg in algorithms)
 			{
@@ -44,16 +45,16 @@ namespace StaticProcessor
             //AdditionalMeasures.AddConsistency(algorithms);
             //AdditionalMeasures.AddSuccessRate(algorithms, 1000);
 
-			StaticRanker.Rank(algorithms, directory);
+			StaticRanker.Rank(algorithms, _directory);
         }
 
 		/// <summary>
 		/// Specify the command line arguments.
 		/// </summary>
-		static readonly OptionSet options = new OptionSet
+		private static readonly OptionSet Options = new OptionSet
 		{
-			{ "d|directory=", "The directory to parse. ", v => directory = v },
-			{ "i|iteration=", "The iteration to summarize", v => iteration = int.Parse(v) }
+			{ "d|directory=", "The directory to parse. ", v => _directory = v },
+			{ "i|iteration=", "The iteration to summarize", v => _iteration = int.Parse(v) }
 		};
 	}
 }

@@ -10,7 +10,7 @@ namespace CIlibProcessor.Common
         /// <summary>
         /// The iteration statistics.
         /// </summary>
-        readonly ConcurrentDictionary<int, IterationStats> _iterationStatistics;
+        private readonly ConcurrentDictionary<int, IterationStats> _iterationStatistics;
 
         /// <summary>
         /// Gets the name of this measure.
@@ -34,9 +34,7 @@ namespace CIlibProcessor.Common
 
         public IEnumerable<int> Iterations => _iterationStatistics.Keys;
 
-        int maxIters = -1;
-
-        public int MaximumIterations => maxIters;
+        public int MaximumIterations { get; private set; } = -1;
 
         //public bool Minimization{ get; private set; }
 
@@ -60,7 +58,7 @@ namespace CIlibProcessor.Common
         {
             _iterationStatistics.TryAdd(iteration, stats);
             
-            if (iteration > maxIters) maxIters = iteration; //check if the new iteration is greater than previous maximum
+            if (iteration > MaximumIterations) MaximumIterations = iteration; //check if the new iteration is greater than previous maximum
         }
 
         public override string ToString()

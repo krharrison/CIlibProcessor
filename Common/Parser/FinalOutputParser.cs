@@ -2,7 +2,7 @@
 using System.Linq;
 using MiscUtil.IO;
 
-namespace CIlibProcessor.Common
+namespace CIlibProcessor.Common.Parser
 {
 	/// <summary>
 	/// Reads only the final line of output from a CIlib output file.

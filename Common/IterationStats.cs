@@ -10,15 +10,15 @@ namespace CIlibProcessor.Common
     //[DebuggerDisplay("Iter = {Iteration}, Avg = {Average}")]
     public class IterationStats
     {
-		bool stats;
-		double average;
-		double standardDeviation;
-		double min;
-		double max;
-		double median;
+	    private bool _stats;
+	    private double _average;
+	    private double _standardDeviation;
+	    private double _min;
+	    private double _max;
+	    private double _median;
 
         //the iteration which these values were recorded
-        public int Iteration{ get; private set; }
+        public int Iteration{ get; }
 
 		/// <summary>
 		/// Gets the average.
@@ -28,8 +28,8 @@ namespace CIlibProcessor.Common
 		{
 			get
 			{
-				if (!stats) CalculateStats();
-				return average;
+				if (!_stats) CalculateStats();
+				return _average;
 			}
 		}
 
@@ -41,8 +41,8 @@ namespace CIlibProcessor.Common
 		{
 			get
 			{
-				if (!stats) CalculateStats();
-				return standardDeviation;
+				if (!_stats) CalculateStats();
+				return _standardDeviation;
 			}
 		}
 
@@ -51,8 +51,8 @@ namespace CIlibProcessor.Common
 		{
 			get
 			{
-				if (!stats) CalculateStats();
-				return min;
+				if (!_stats) CalculateStats();
+				return _min;
 			}
 		}
 
@@ -60,8 +60,8 @@ namespace CIlibProcessor.Common
 		{
 			get
 			{
-				if (!stats) CalculateStats();
-				return max;
+				if (!_stats) CalculateStats();
+				return _max;
 			}
 		}
 
@@ -69,8 +69,8 @@ namespace CIlibProcessor.Common
 		{
 			get
 			{
-				if (!stats) CalculateStats();
-				return median;
+				if (!_stats) CalculateStats();
+				return _median;
 			}
 		}
 
@@ -91,33 +91,33 @@ namespace CIlibProcessor.Common
             Iteration = iteration;
             Values = values.ToList();
 
-			stats = false;
+			_stats = false;
         }
 
-		void CalculateStats()
+	    private void CalculateStats()
 		{
-			min = double.MaxValue;
-			max = double.MinValue;
+			_min = double.MaxValue;
+			_max = double.MinValue;
 			double sum = 0;
 			int count = 0;
 
 			foreach (double val in Values)
 			{
-				min = Math.Min(min, val);
-				max = Math.Max(max, val);
+				_min = Math.Min(_min, val);
+				_max = Math.Max(_max, val);
 				sum += val;
 				count++;
 			}
 
-			average = sum / count;
+			_average = sum / count;
 
 			//calculate standard deviation
-			double devSum = Values.Sum(x => Math.Pow(x - average, 2));
-			standardDeviation = Math.Sqrt(devSum / (Values.Count - 1));
+			double devSum = Values.Sum(x => Math.Pow(x - _average, 2));
+			_standardDeviation = Math.Sqrt(devSum / (Values.Count - 1));
 
-			median = Values.Median();
+			_median = Values.Median();
 
-			stats = true;
+			_stats = true;
 		}
 
         public override string ToString()

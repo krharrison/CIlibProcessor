@@ -70,7 +70,7 @@ namespace CIlibProcessor.Common
             }
         }
                 
-        static List<double> LogarithmicallyIncreasingScale(double min, double max, int length)
+        private static List<double> LogarithmicallyIncreasingScale(double min, double max, int length)
 		{
             max = Math.Log(max);
             min = Math.Log(min);

@@ -3,85 +3,57 @@ using NDesk.Options;
 using CIlibProcessor.Common;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
+using CIlibProcessor.Common.Parser;
 
 namespace SummaryStatistics
 {
-	class Program
+	internal class Program
 	{
-		static string directory;
-		static double? minimum;
-		static bool verbose;
-		static int iteration = -1;
+	    private static string _files;
+	    private static bool _singleFile;
+	    private static double? _minimum;
+	    private static bool _verbose;
+	    private static int _iteration = -1;
 
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
-			options.Parse(args);
+			Options.Parse(args);
 
 			//check that the file exists before attempting to parse
-			if (!Directory.Exists(directory))
+			if (!Directory.Exists(_files))
 			{
-				Console.WriteLine($"Directory \"{directory}\" does not exist");
+				Console.WriteLine($"Directory \"{_files}\" does not exist");
 				return;
 			}
 
 			CIlibParser parser;
 
-			if (iteration < 0) //parse only final output
+			if (_iteration < 0) //parse only final output
 				parser = new FinalOutputParser();
 			else //parse entire file
-				parser = new SingleIterationParser(iteration);
+				parser = new SingleIterationParser(_iteration);
 
-			List<Algorithm> algorithms = parser.ParseDirectory(directory);
-			string outputPath = Path.Combine(directory, "summaries");
+			//parse either a single file or directory, depending on context
+			List<Algorithm> algorithms = _singleFile ? new List<Algorithm> {parser.Parse(_files)} : parser.ParseDirectory(_files);
 
-			if (!Directory.Exists(outputPath))
-				Directory.CreateDirectory(outputPath);
+			string outputPath = Path.Combine(_files, "summaries");
 
-			foreach (string measure in algorithms[0].Measurements.Select(x => x.Name))
-			{
-				string fileName = Path.Combine(outputPath, $"{measure}.csv");
-				using (TextWriter writer = new StreamWriter(fileName))
-				{
-					//writer.WriteLine("Algorithm,Mean,Stdandard Deviation,Min,Max");
-					if (verbose)
-					{
-						Console.WriteLine(measure);
-						Console.WriteLine("    Alg    |    Min    |   Median  |   Mean    |  Std.Dev  | Max");
-					}
-					foreach (Algorithm alg in algorithms)
-					{
-						IterationStats stats = alg.Measurements.Find(m => m.Name == measure).FinalIteration; //get the stats for the associated measure																																														//writer.WriteLine("{0},{1},{2},{3},{4}", alg.Name, stats.Average, stats.StandardDeviation, stats.Min, stats.Max);
-						writer.WriteLine("{0} & {1:e2} & {2:e2} & {3:e2} & {4:e2} & {5:e2} \\\\ \\hline", alg.Name, checkMin(stats.Min), checkMin(stats.Median), checkMin(stats.Average), checkMin(stats.StandardDeviation), checkMin(stats.Max));
-						if (verbose) Console.WriteLine("{0,10} | {1:0.000} | {2:0.000} | {3:0.000} | {4:0.000} | {5:0.000}", alg.Name, checkMin(stats.Min), checkMin(stats.Median), checkMin(stats.Average), checkMin(stats.StandardDeviation), checkMin(stats.Max));
-					}
-					if (verbose) Console.WriteLine();
-				}
-			}
+			Summarizer sum = new Summarizer(_minimum);
+		    sum.Summarize(algorithms, outputPath, _verbose);
 		}
 
-		/// <summary>
-		/// Return 0 if the specified value is below the minimum.
-		/// </summary>
-		/// <returns>The minimum.</returns>
-		/// <param name="value">Value.</param>
-		static double checkMin(double value)
-		{
-			if (!minimum.HasValue)
-				return value;
 
-			return value < minimum.Value ? 0 : value;
-		}
 
 		/// <summary>
 		/// Specify the command line arguments.
 		/// </summary>
-		static OptionSet options = new OptionSet
+		private static readonly OptionSet Options = new OptionSet
 		{
-			{ "d|directory=", "The directory to process.", v => directory = v },
-			{ "m|min=","The minimal value. Values below the minimum are considered 0.", v => minimum = double.Parse(v) },
-			{ "v|verbose", "Show console output.", v => verbose = true },
-			{ "i|iteration=", "The iteration to summarize", v => iteration = int.Parse(v) }
+			{ "d|directory=", "The files to process.", v => _files = v },
+		    {"f|file", "Summarize a single file", v => _singleFile =  true},
+			{ "m|min=","The minimal value. Values below the minimum are considered 0.", v => _minimum = double.Parse(v) },
+			{ "v|verbose", "Show console output.", v => _verbose = true },
+			{ "i|iteration=", "The iteration to summarize", v => _iteration = int.Parse(v) }
 		};
 	}
 }

@@ -8,22 +8,22 @@ namespace CIlibProcessor.Statistics
 {
 	public static class KruskalWallisTest
 	{
-		public static double Calculate(IEnumerable<IterationStats> stats)
+		public static double Calculate(IterationStats[] stats)
 		{
 			//TODO: verification stuffs
 
 			//get list of all values
-			IEnumerable<double> values = stats.SelectMany(x => x.Values);
+			double[] values = stats.SelectMany(x => x.Values).ToArray();
 
 			//rank the values
 			List<double> ranks = Helpers.Rank(values).Ranks;
 
 			//number of groups
-			int k = stats.Count();
+			int k = stats.Length;
 
 			if (k < 1) throw new ArgumentException("All observations are in the same group");
 
-			int n = values.Count();
+			int n = values.Length;
 
 			Dictionary<double, int> nties = Helpers.NumTies(values);
 
@@ -33,7 +33,7 @@ namespace CIlibProcessor.Statistics
 			{
 				int groupSize = group.Values.Count;
 				double val = ranks.Skip(index).Take(groupSize).Sum();
-				statistic += Math.Pow(val, 2) / groupSize;
+				statistic += (Math.Pow(val, 2) / groupSize);
 
 				index += groupSize;
 			}
@@ -46,6 +46,6 @@ namespace CIlibProcessor.Statistics
 		}
 
 		[DllImport("Rmath", CallingConvention = CallingConvention.Cdecl)]
-		static extern double pchisq(double x, double df, int lower_tail, int log_p);
+		private static extern double pchisq(double x, double df, int lowerTail, int logP);
 	}
 }

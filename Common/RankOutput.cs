@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Diagnostics;
-
-namespace CIlibProcessor.Common
+﻿namespace CIlibProcessor.Common
 {
 	public class RankOutput
 	{
 
-		public string Algorithm { get; private set; }
+		public string Algorithm { get; }
 
 		public double Wins { get; set; }
 

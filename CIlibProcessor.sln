@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testbed", "Testbed\Testbed.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistics", "Statistics\Statistics.csproj", "{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuccessRateProcessor", "SuccessRateProcessor\SuccessRateProcessor.csproj", "{BD1F4F45-09B1-4893-A0B1-5FF7F83F6064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -55,5 +57,9 @@ Global
 		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Debug|x86.Build.0 = Debug|Any CPU
 		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Release|x86.ActiveCfg = Release|Any CPU
 		{4084E70E-957B-4D4D-8F7F-DABAF25D8B4B}.Release|x86.Build.0 = Release|Any CPU
+		{BD1F4F45-09B1-4893-A0B1-5FF7F83F6064}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BD1F4F45-09B1-4893-A0B1-5FF7F83F6064}.Debug|x86.Build.0 = Debug|Any CPU
+		{BD1F4F45-09B1-4893-A0B1-5FF7F83F6064}.Release|x86.ActiveCfg = Release|Any CPU
+		{BD1F4F45-09B1-4893-A0B1-5FF7F83F6064}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

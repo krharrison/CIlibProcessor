@@ -7,7 +7,7 @@ namespace CIlibProcessor.Common
     {
         public string Name { get; }
 
-        public List<Measurement> Measurements { get; private set; }
+        public List<Measurement> Measurements { get; }
 
         public Algorithm(string name, IEnumerable<Measurement> measurements)
         {

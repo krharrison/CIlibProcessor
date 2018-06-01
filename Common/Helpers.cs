@@ -16,24 +16,17 @@ namespace CIlibProcessor.Common
 
 			Array.Sort(temp);
 
-			if (count % 2 == 0)
-			{
-				// count is even, average two middle elements
-				double a = temp[count / 2 - 1];
-				double b = temp[count / 2];
-				return (a + b) / 2;
-			}
-			else
-			{
-				// count is odd, return the middle element
-				return temp[count / 2];
-			}
+			if (count % 2 != 0) return temp[count / 2];
+			double a = temp[count / 2 - 1];
+			double b = temp[count / 2];
+			return (a + b) / 2;
+			// otherwise, count is odd, return the middle element
 		}
 
 		/// <summary>
 		/// No idea what this is, copied directly from the C code.
 		/// </summary>
-		static readonly int[] sincs = {
+		private static readonly int[] Sincs = {
 			1073790977, 268460033, 67121153, 16783361, 4197377, 1050113,
 			262913, 65921, 16577, 4193, 1073, 281, 77, 23, 8, 1, 0
 		};
@@ -46,7 +39,7 @@ namespace CIlibProcessor.Common
 		{
 			T[] x = values.ToArray();
 		    int n = x.Length;
-			int j, t, lo = 0, hi = n - 1;
+			int j, t, hi = n - 1;
 
 		    int[] ranks = new int[n];
 			for (int a = 0; a < ranks.Length; a++)
@@ -56,37 +49,37 @@ namespace CIlibProcessor.Common
 
 			//TODO: handle na?
 
-			for (t = 0; sincs[t] > hi - lo + 1; t++) { } //yes, this is meant to be an empty loop
+			for (t = 0; Sincs[t] > hi + 1; t++) { } //yes, this is meant to be an empty loop
 														 //if (n < 2) return;
 
-			for (int h = sincs[t]; t < 16; h = sincs[++t])
+			for (int h = Sincs[t]; t < 16; h = Sincs[++t])
 			{
 				//R_CheckUserInterrupt();	 
-				for (int i = lo + h; i <= hi; i++)
+				for (int i = h; i <= hi; i++)
 				{
 					var itmp = ranks[i];
 					j = i;
-					while (j >= lo + h && Greater(x, ranks[j - h], itmp))
+					while (j >= h && Greater(x, ranks[j - h], itmp))
 					{
-						ranks[j] = ranks[j - h]; j -= h;
+						ranks[j] = ranks[j - h];
+					    j -= h;
 					}
 					ranks[j] = itmp;
 				}
 			}
 
+		    //here is the tie handling
 			double[] dRanks = new double[n];
 			for (int i = 0; i < n; i = j + 1)
 			{
 				j = i;
-				while ((j < n - 1) && x[ranks[j]].Equals(x[ranks[j + 1]])) j++; //TODO: is equals ok here?
+				while (j < n - 1 && x[ranks[j]].Equals(x[ranks[j + 1]])) j++; //TODO: is equals ok here?
 
 				double avgRank = (i + j + 2) / 2.0;
 				for (int k = i; k <= j; k++)
 				{
 					dRanks[ranks[k]] = avgRank;
 				}
-
-
 			}
 
 			return new OrderResult(dRanks.ToList(), ranks.ToList());
@@ -94,7 +87,7 @@ namespace CIlibProcessor.Common
 
 		public static bool Greater<T>(T[] x, int a, int b) where T : IComparable<T>
 		{
-			return (x[a].CompareTo(x[b]) > 0 || (x[a].Equals(x[b]) && a > b));
+			return x[a].CompareTo(x[b]) > 0; /*|| (x[a].Equals(x[b]) && a > b)*/ //TODO: does order matter here?
 		}
 
 
@@ -107,7 +100,7 @@ namespace CIlibProcessor.Common
 		{
 			OrderResult result = Rank(values);
 
-			List<int> order = new List<int>(result.Indexes.Count());
+			List<int> order = new List<int>(result.Indexes.Count);
 			foreach (int index in result.Indexes)
 			{
 				order.Add(index + 1);
@@ -151,7 +144,7 @@ namespace CIlibProcessor.Common
 		}
 
 		//TODO: finish
-		public static void WriteRankOutputFile(string filename, IEnumerable<RankOutput> outputs)
+		public static void WriteRankOtputFile(string filename, IEnumerable<RankOutput> outputs)
 		{
 			outputs = outputs.OrderBy(x => x.Algorithm); //sort them things
 			IEnumerable<double> ranks = Rank(outputs.Select(x => -x.Difference)).Ranks;

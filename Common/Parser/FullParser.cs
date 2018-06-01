@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace CIlibProcessor.Common
+namespace CIlibProcessor.Common.Parser
 {
 	/// <summary>
 	/// Reads all lines from a CIlib ouput file in parallel.
@@ -19,12 +19,9 @@ namespace CIlibProcessor.Common
 			//read all lines, then parse in parallel
 			string file = reader.ReadToEnd();
 			reader.Close();
-			string[] lines = file.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] lines = file.Split(new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-			Parallel.ForEach(lines, l =>
-			{
-				ReadLine(l);
-			});
+			Parallel.ForEach(lines, ReadLine);
 		}
 	}
 }

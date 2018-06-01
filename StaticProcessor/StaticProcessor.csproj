@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>StaticProcessor</RootNamespace>
     <AssemblyName>StaticProcessor</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,10 +34,10 @@
     <Commandlineparameters>-d "/home/kyle/cilib/data/sapso-EC/CEC2013-f1/30D"</Commandlineparameters>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="NDesk.Options">
+    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StaticProcessor.cs" />
